@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Portfolio d'Alenzo Wauters</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Google Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;400&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4f8cff;
+            --secondary: #38e2ff;
+            --accent: #ff4f8c;
+            --bg-gradient: linear-gradient(135deg, #181c2b 0%, #232946 100%);
+            --header-gradient: linear-gradient(90deg, #232946 0%, #4f8cff 100%);
+            --card-bg: rgba(30,34,54,0.98);
+            --shadow: 0 8px 32px 0 rgba(79, 140, 255, 0.18);
+            --shadow-hover: 0 16px 48px 0 rgba(56, 226, 255, 0.28);
+            --text: #e3e8f7;
+            --text-secondary: #bfc9e0;
+            --nav-bg: rgba(24,28,43,0.98);
+            --nav-active: #232946;
+            --scrollbar-bg: #232946;
+            --scrollbar-thumb: #4f8cff;
+        }
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            min-height: 100vh;
+            background: var(--bg-gradient);
+            font-family: 'Roboto', Arial, sans-serif;
+            color: var(--text);
+            margin: 0;
+            overflow-x: hidden;
+        }
+        /* Top navigation bar (scrolling) */
+        .top-navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            z-index: 100;
+            background: var(--nav-bg);
+            box-shadow: 0 2px 16px 0 rgba(79,140,255,0.13);
+            overflow-x: auto;
+            white-space: nowrap;
+            animation: slideDown 1.2s cubic-bezier(.4,0,.2,1);
+        }
+        .top-navbar::-webkit-scrollbar {
+            height: 0;
+        }
+        .top-navbar a {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-family: 'Montserrat', Arial, sans-serif;
+            font-weight: 700;
+            font-size: 1.1em;
+            padding: 16px 32px;
+            border-radius: 0 0 30px 30px;
+            margin: 0 2px;
+            transition: background 0.25s, color 0.25s, box-shadow 0.25s, transform 0.2s;
+            position: relative;
+        }
+        .top-navbar a.active, .top-navbar a:hover {
+            background: var(--header-gradient);
+            color: #fff;
+            box-shadow: 0 4px 18px 0 rgba(79,140,255,0.18);
+            transform: translateY(2px) scale(1.05);
+        }
+        /* Animated underline */
+        .top-navbar a::after {
+            content: '';
+            display: block;
+            height: 3px;
+            width: 0;
+            background: var(--secondary);
+            border-radius: 2px;
+            transition: width 0.3s;
+            margin-top: 4px;
+        }
+        .top-navbar a.active::after, .top-navbar a:hover::after {
+            width: 80%;
+        }
+        /* Header */
+        header {
+            background: var(--header-gradient);
+            color: #fff;
+            padding: 90px 0 30px 0;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 4px 24px 0 rgba(31, 38, 135, 0.10);
+            animation: fadeInDown 1.2s cubic-bezier(.4,0,.2,1);
+        }
+        header .profile-pic {
+            width: 130px;
+            height: 130px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 5px solid #fff;
+            box-shadow: 0 4px 24px 0 rgba(31, 38, 135, 0.18);
+            margin-bottom: 18px;
+            animation: bounceIn 1.2s cubic-bezier(.4,0,.2,1);
+        }
+        header h1 {
+            font-family: 'Montserrat', Arial, sans-serif;
+            font-size: 2.7em;
+            margin: 0 0 10px 0;
+            letter-spacing: 2px;
+            text-shadow: 0 2px 8px rgba(79,140,255,0.25);
+            animation: fadeInUp 1.2s cubic-bezier(.4,0,.2,1);
+        }
+        header p {
+            font-size: 1.2em;
+            margin: 0;
+            font-weight: 500;
+            letter-spacing: 1px;
+            color: var(--text-secondary);
+            animation: fadeInUp 1.5s cubic-bezier(.4,0,.2,1);
+        }
+        .container {
+            max-width: 1000px;
+            margin: 60px auto 40px auto;
+            padding: 0 20px;
+        }
+        section {
+            display: none;
+            animation: fadeInUp 1.1s cubic-bezier(.4,0,.2,1);
+        }
+        section.active {
+            display: block;
+            animation: fadeInUp 1.1s cubic-bezier(.4,0,.2,1);
+        }
+        .card {
+            background: var(--card-bg);
+            border-radius: 22px;
+            box-shadow: var(--shadow);
+            padding: 38px 40px 32px 40px;
+            margin: 32px 0;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+            position: relative;
+            overflow: hidden;
+            transition: box-shadow 0.4s cubic-bezier(.4,0,.2,1), transform 0.4s cubic-bezier(.4,0,.2,1);
+            animation: cardPop 1.2s cubic-bezier(.4,0,.2,1);
+        }
+        .card:hover {
+            box-shadow: var(--shadow-hover);
+            transform: translateY(-6px) scale(1.025) rotate(-1deg);
+            animation: none;
+        }
+        h2 {
+            font-family: 'Montserrat', Arial, sans-serif;
+            font-size: 2em;
+            color: var(--primary);
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            animation: fadeInLeft 1.1s cubic-bezier(.4,0,.2,1);
+        }
+        h2 .icon {
+            font-size: 1.2em;
+            color: var(--secondary);
+            filter: drop-shadow(0 0 6px var(--primary));
+        }
+        h3 {
+            font-family: 'Montserrat', Arial, sans-serif;
+            color: var(--secondary);
+            margin-top: 24px;
+            margin-bottom: 10px;
+            font-size: 1.18em;
+            letter-spacing: 1px;
+            animation: fadeInRight 1.2s cubic-bezier(.4,0,.2,1);
+        }
+        h4 {
+            color: var(--accent);
+            margin-top: 0;
+            margin-bottom: 18px;
+            font-size: 1.05em;
+            animation: fadeInRight 1.3s cubic-bezier(.4,0,.2,1);
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 24px 0;
+        }
+        ul li {
+            padding: 12px 0 12px 38px;
+            position: relative;
+            color: var(--text-secondary);
+            font-size: 1.08em;
+            opacity: 0;
+            animation: fadeInList 0.8s forwards;
+        }
+        ul li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 18px;
+            width: 16px;
+            height: 16px;
+            background: linear-gradient(135deg, #4f8cff 0%, #38e2ff 100%);
+            border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(79,140,255,0.25);
+        }
+        .img-row {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            align-items: center;
+            margin: 30px 0 18px 0;
+            flex-wrap: wrap;
+            animation: fadeInUp 1.2s cubic-bezier(.4,0,.2,1);
+        }
+        .img-row img, .img-row svg {
+            height: 70px;
+            width: auto;
+            border-radius: 12px;
+            background: #232946;
+            box-shadow: 0 2px 12px 0 rgba(79,140,255,0.13);
+            padding: 8px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            filter: grayscale(0.2) brightness(0.95) drop-shadow(0 0 8px #4f8cff33);
+            opacity: 0.92;
+            animation: imgPop 1.2s cubic-bezier(.4,0,.2,1);
+        }
+        .img-row img:hover, .img-row svg:hover {
+            transform: scale(1.13) rotate(-3deg);
+            box-shadow: 0 8px 32px 0 var(--secondary);
+            filter: grayscale(0) brightness(1.1) drop-shadow(0 0 16px #38e2ff99);
+            opacity: 1;
+        }
+        .cv-section, .lettre-section {
+            margin-bottom: 30px;
+        }
+        .lettre-section p {
+            font-size: 1.13em;
+            color: var(--text);
+            line-height: 1.7;
+            margin-bottom: 0;
+            background: linear-gradient(90deg, #232946 60%, #4f8cff 100%);
+            border-radius: 12px;
+            padding: 24px 28px;
+            box-shadow: 0 2px 12px 0 rgba(79,140,255,0.13);
+            animation: fadeInUp 1.4s cubic-bezier(.4,0,.2,1);
+            position: relative;
+            transition: box-shadow 0.3s, transform 0.3s;
+        }
+        .lettre-section p::before {
+            content: "✉️";
+            font-size: 1.5em;
+            position: absolute;
+            left: -36px;
+            top: 18px;
+            opacity: 0.7;
+            animation: bounceIn 1.2s cubic-bezier(.4,0,.2,1);
+        }
+        /* Social floating bar */
+        .social-float {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 200;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            background: rgba(24,28,43,0.92);
+            border-radius: 30px;
+            box-shadow: 0 4px 24px 0 rgba(79,140,255,0.18);
+            padding: 16px 10px;
+            animation: fadeInRight 1.5s cubic-bezier(.4,0,.2,1);
+        }
+        .social-float a {
+            color: var(--secondary);
+            font-size: 2em;
+            margin: 0 4px;
+            transition: color 0.2s, transform 0.2s, box-shadow 0.2s;
+            text-shadow: 0 2px 8px #4f8cff44;
+        }
+        .social-float a:hover {
+            color: var(--accent);
+            transform: scale(1.18) rotate(-8deg);
+            text-shadow: 0 4px 16px #ff4f8c99;
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+            background: var(--scrollbar-bg);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--scrollbar-thumb);
+            border-radius: 8px;
+        }
+        /* Responsive */
+        @media (max-width: 700px) {
+            .container {
+                padding: 0 4px;
+            }
+            .card {
+                padding: 18px 8px 18px 8px;
+            }
+            .img-row {
+                gap: 12px;
+            }
+            .top-navbar a {
+                padding: 12px 12px;
+                font-size: 1em;
+            }
+            .social-float {
+                bottom: 10px;
+                right: 10px;
+                padding: 10px 4px;
+            }
+        }
+        /* Animations */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(40px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-40px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+        @keyframes fadeInLeft {
+            from { opacity: 0; transform: translateX(-40px);}
+            to { opacity: 1; transform: translateX(0);}
+        }
+        @keyframes fadeInRight {
+            from { opacity: 0; transform: translateX(40px);}
+            to { opacity: 1; transform: translateX(0);}
+        }
+        @keyframes cardPop {
+            0% { opacity: 0; transform: scale(0.95);}
+            60% { opacity: 1; transform: scale(1.04);}
+            100% { opacity: 1; transform: scale(1);}
+        }
+        @keyframes imgPop {
+            0% { opacity: 0; transform: scale(0.7);}
+            60% { opacity: 1; transform: scale(1.13);}
+            100% { opacity: 0.92; transform: scale(1);}
+        }
+        @keyframes fadeInList {
+            from { opacity: 0; transform: translateX(20px);}
+            to { opacity: 1; transform: translateX(0);}
+        }
+        @keyframes bounceIn {
+            0% { transform: scale(0.5); opacity: 0;}
+            60% { transform: scale(1.2);}
+            80% { transform: scale(0.95);}
+            100% { transform: scale(1); opacity: 0.7;}
+        }
+        @keyframes slideDown {
+            from { transform: translateY(-100%);}
+            to { transform: translateY(0);}
+        }
+    </style>
+    <script>
+        function showPage(pageId) {
+            const pages = ['presentation', 'lycee', 'stages', 'cvlettre'];
+            pages.forEach(function(id) {
+                var el = document.getElementById(id);
+                if (el) el.classList.remove('active');
+            });
+            var pageEl = document.getElementById(pageId);
+            if (pageEl) pageEl.classList.add('active');
+            // Set nav active
+            document.querySelectorAll('.top-navbar a').forEach(a => a.classList.remove('active'));
+            let navMap = {
+                'presentation': 0,
+                'lycee': 1,
+                'stages': 2,
+                'cvlettre': 3
+            };
+            if (typeof navMap[pageId] !== "undefined") {
+                document.querySelectorAll('.top-navbar a')[navMap[pageId]].classList.add('active');
+            }
+            // Scroll to top with animation
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }
+        window.onload = function() {
+            showPage('presentation');
+        };
+        // Animation d'apparition progressive des éléments de liste
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('ul').forEach(function(ul) {
+                let items = ul.querySelectorAll('li');
+                items.forEach((li, i) => {
+                    li.style.animationDelay = (0.2 + i * 0.12) + 's';
+                });
+            });
+            // Animation d'ondulation sur hover pour la lettre
+            const lettre = document.querySelector('.lettre-section p');
+            if(lettre) {
+                lettre.addEventListener('mouseenter', function() {
+                    lettre.style.boxShadow = '0 8px 32px 0 rgba(56,226,255,0.18)';
+                    lettre.style.transform = 'scale(1.025) rotate(-1deg)';
+                });
+                lettre.addEventListener('mouseleave', function() {
+                    lettre.style.boxShadow = '0 2px 12px 0 rgba(79,140,255,0.13)';
+                    lettre.style.transform = 'scale(1) rotate(0)';
+                });
+            }
+        });
+    </script>
+</head>
+<body>
+    <div class="top-navbar">
+        <a href="#" onclick="showPage('presentation'); return false;"><i class="fa-solid fa-user"></i> Présentation</a>
+        <a href="#" onclick="showPage('lycee'); return false;"><i class="fa-solid fa-school"></i> Lycée Gaston Berger</a>
+        <a href="#" onclick="showPage('stages'); return false;"><i class="fa-solid fa-briefcase"></i> Stages</a>
+        <a href="#" onclick="showPage('cvlettre'); return false;"><i class="fa-solid fa-file-lines"></i> CV & Lettre</a>
+    </div>
+    <header>
+        <img src="https://avatars.githubusercontent.com/u/9919?s=200&v=4" alt="Photo de profil Alenzo" class="profile-pic" />
+        <h1>
+            <i class="fa-solid fa-laptop-code"></i> Portfolio d'Alenzo Wauters
+        </h1>
+        <p>
+            <i class="fa-solid fa-graduation-cap"></i> Étudiant en SIO SISR au lycée Gaston Berger
+        </p>
+    </header>
+    <div class="container">
+        <!-- Présentation -->
+        <section id="presentation" class="active">
+            <div class="card">
+                <h2><span class="icon"><i class="fa-solid fa-user"></i></span> Présentation</h2>
+                <div class="img-row">
+                    <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Avatar" title="Moi" />
+                    <img src="https://cdn-icons-png.flaticon.com/512/2721/2721296.png" alt="Réseaux" title="Réseaux" />
+                    <img src="https://cdn-icons-png.flaticon.com/512/2721/2721304.png" alt="Cybersécurité" title="Cybersécurité" />
+                </div>
+                <p>
+                    Bonjour, je m'appelle <strong>Alenzo Wauters</strong>, j'ai 20 ans et je suis actuellement étudiant au <strong>lycée Gaston Berger</strong> à Ronchin en <strong>BTS SIO option SISR</strong> (Solutions d’Infrastructure, Systèmes et Réseaux).
+                </p>
+                <p>
+                    Je suis passionné par les réseaux informatiques, la cybersécurité, l'administration des systèmes et la gestion d'infrastructures. Mon objectif est de devenir un professionnel compétent dans le domaine des réseaux et de l'infrastructure IT.
+                </p>
+            </div>
+        </section>
+        <!-- Lycée -->
+        <section id="lycee">
+            <div class="card">
+                <h2><span class="icon"><i class="fa-solid fa-school"></i></span> Lycée Gaston Berger - Ronchin</h2>
+                <div class="img-row">
+                    <img src="https://www.lycee-gastonberger.fr/wp-content/uploads/2021/09/berger-1-scaled.jpg" alt="Lycée Gaston Berger" title="Lycée Gaston Berger" />
+                    <img src="https://www.lycee-gastonberger.fr/wp-content/uploads/2021/09/berger-2-scaled.jpg" alt="Lycée Gaston Berger 2" title="Lycée Gaston Berger 2" />
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/Lyc%C3%A9e_Gaston_Berger_Ronchin.jpg" alt="Lycée Gaston Berger" title="Lycée Gaston Berger" />
+                    <img src="https://cdn-icons-png.flaticon.com/512/3135/3135789.png" alt="Étudiants" title="Étudiants" />
+                    <img src="https://cdn-icons-png.flaticon.com/512/2721/2721304.png" alt="SISR" title="SISR" />
+                </div>
+                <p>
+                    Le lycée Gaston Berger, situé à Ronchin, propose de nombreuses formations dont le <strong>BTS SIO</strong> (Services Informatiques aux Organisations) avec l'option <strong>SISR</strong> (Solutions d’Infrastructure, Systèmes et Réseaux).
+                </p>
+                <ul>
+                    <li>Formation axée sur l'administration des réseaux et des systèmes informatiques</li>
+                    <li>Enseignement pratique et théorique</li>
+                    <li>Projets en équipe et stages en entreprise</li>
+                    <li>Accompagnement vers la professionnalisation et la poursuite d'études</li>
+                </ul>
+                <p>
+                    Le lycée dispose d'équipements modernes et d'une équipe pédagogique expérimentée pour accompagner les étudiants dans leur parcours.
+                </p>
+            </div>
+        </section>
+        <!-- Stages (Page réunissant les deux stages) -->
+        <section id="stages">
+            <div class="card">
+                <h2><span class="icon"><i class="fa-solid fa-briefcase"></i></span> Stages</h2>
+                <div class="img-row">
+                    <button class="stage-btn" onclick="showStage('stage1')">
+                        <i class="fa-solid fa-briefcase"></i> Stage de 1<sup>ère</sup> année
+                    </button>
+                    <button class="stage-btn" onclick="showStage('stage2')">
+                        <i class="fa-solid fa-briefcase"></i> Stage de 2<sup>ème</sup> année
+                    </button>
+                </div>
+            </div>
+            <!-- Stage 1ère année (caché par défaut) -->
+            <div class="card stage-details" id="stage1-details" style="display:none;">
+                <button class="back-btn" onclick="hideStageDetails()"><i class="fa-solid fa-arrow-left"></i> Retour aux stages</button>
+                <h2><span class="icon"><i class="fa-solid fa-briefcase"></i></span> Stage de 1<sup>ère</sup> année</h2>
+                <div class="img-row">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/2/2e/Veolia_Environnement_logo.svg" alt="Veolia Logo" title="Veolia" />
+                    <img src="https://www.veolia.com/sites/g/files/dvc4206/files/styles/og_image/public/image/2022/10/veolia-campus-lezennes.jpg?itok=1QnQwQwA" alt="Veolia Lezennes" title="Veolia Lezennes" />
+                    <img src="https://www.veolia.com/sites/g/files/dvc4206/files/styles/og_image/public/image/2022/10/veolia-campus-lezennes-2.jpg?itok=1QnQwQwA" alt="Veolia Lezennes 2" title="Veolia Lezennes 2" />
+                    <img src="https://cdn-icons-png.flaticon.com/512/2721/2721296.png" alt="Réseaux" title="Réseaux" />
+                    <img src="https://cdn-icons-png.flaticon.com/512/2721/2721304.png" alt="Infrastructure" title="Infrastructure" />
+                </div>
+                <h3><i class="fa-solid fa-building"></i> Entreprise : Veolia Lezennes</h3>
+                <h4><i class="fa-solid fa-network-wired"></i> Secteur : Réseaux et Infrastructure Informatique</h4>
+                <p>
+                    Lors de ma première année de BTS SIO SISR, j'ai effectué un stage chez <strong>Veolia</strong> à <strong>Lezennes</strong> dans le secteur des réseaux et de l'infrastructure informatique.
+                </p>
+                <div class="competences-list">
+                    <h3>Compétences du stage</h3>
+                    <ul>
+                        <li>
+                            <button class="competence-btn" onclick="showCompetence('patrimoine1')">Gérer le patrimoine informatique</button>
+                        </li>
+                        <li>
+                            <button class="competence-btn" onclick="showCompetence('incidents1')">Répondre aux incidents et aux demandes d'assistance et d'évolution</button>
+                        </li>
+                        <li>
+                            <button class="competence-btn" onclick="showCompetence('presence1')">Développer la présence en ligne de l'organisation</button>
+                        </li>
+                        <li>
+                            <button class="competence-btn" onclick="showCompetence('projet1')">Travailler en mode projet</button>
+                        </li>
+                        <li>
+                            <button class="competence-btn" onclick="showCompetence('service1')">Mettre à disposition des utilisateurs un service informatique</button>
+                        </li>
+                        <li>
+                            <button class="competence-btn" onclick="showCompetence('devpro1')">Organiser son développement professionnel</button>
+                        </li>
+                    </ul>
+                </div>
+                <!-- Détails des compétences Stage 1 -->
+                <div class="competence-details" id="patrimoine1" style="display:none;">
+                    <button class="close-competence" onclick="closeCompetence('patrimoine1')">Fermer</button>
+                    <h4>Gérer le patrimoine informatique</h4>
+                    <ul>
+                        <li>Recenser et identifier les ressources numériques</li>
+                        <li>Exploiter des référentiels, normes et standards adoptés par le prestataire informatique</li>
+                        <li>Mettre en place et vérifier les niveaux d'habilitation associés à un service</li>
+                        <li>Vérifier les conditions de la continuité d'un service informatique</li>
+                        <li>Gérer des sauvegardes</li>
+                        <li>Vérifier le respect des règles d'utilisation des ressources numériques</li>
+                    </ul>
+                </div>
+                <div class="competence-details" id="incidents1" style="display:none;">
+                    <button class="close-competence" onclick="closeCompetence('incidents1')">Fermer</button>
+                    <h4>Répondre aux incidents et aux demandes d'assistance et d'évolution</h4>
+                    <ul>
+                        <li>Collecter, suivre et orienter des demandes</li>
+                        <li>Traiter des demandes concernant les services réseau et système, applicatifs</li>
+                        <li>Traiter des demandes concernant les applications</li>
+                    </ul>
+                </div>
+                <div class="competence-details" id="presence1" style="display:none;">
+                    <button class="close-competence" onclick="closeCompetence('presence1')">Fermer</button>
+                    <h4>Développer la présence en ligne de l'organisation</h4>
+                    <ul>
+                        <li>Participer à la valorisation de l'image de l'organisation sur les médias numériques en tenant compte du cadre juridique et des enjeux économiques</li>
+                        <li>Référencer les services en ligne de l'organisation et mesurer leur visibilité</li>
+                        <li>Participer à l'évolution d'un site Web exploitant les données de l'organisation</li>
+                    </ul>
+                </div>
+                <div class="competence-details" id="projet1" style="display:none;">
+                    <button class="close-competence" onclick="closeCompetence('projet1')">Fermer</button>
+                    <h4>Travailler en mode projet</h4>
+                    <ul>
+                        <li>Analyser les objectifs et les modalités d'organisation d'un projet</li>
+                        <li>Planifier les activités</li>
+                        <li>Évaluer les indicateurs de suivi d'un projet et analyser les écarts</li>
+                    </ul>
+                </div>
+                <div class="competence-details" id="service1" style="display:none;">
+                    <button class="close-competence" onclick="closeCompetence('service1')">Fermer</button>
+                    <h4>Mettre à disposition des utilisateurs un service informatique</h4>
+                    <ul>
+                        <li>Réaliser les tests d'intégration et d'acceptation d'un service</li>
+                        <li>Déployer un service</li>
+                        <li>Accompagner les utilisateurs dans la mise en place d'un service</li>
+                    </ul>
+                </div>
+                <div class="competence-details" id="devpro1" style="display:none;">
+                    <button class="close-competence" onclick="closeCompetence('devpro1')">Fermer</button>
+                    <h4>Organiser son développement professionnel</h4>
+                    <ul>
+                        <li>Mettre en place son environnement d'apprentissage personnel</li>
+                        <li>Mettre en œuvre des outils et stratégies de veille informationnelle</li>
+                        <li>Gérer son identité professionnelle</li>
+                        <li>Développer son projet professionnel</li>
+                    </ul>
+                </div>
+            </div>
+            <!-- Stage 2ème année (caché par défaut) -->
+            <div class="card stage-details" id="stage2-details" style="display:none;">
+                <button class="back-btn" onclick="hideStageDetails()"><i class="fa-solid fa-arrow-left"></i> Retour aux stages</button>
+                <h2><span class="icon"><i class="fa-solid fa-briefcase"></i></span> Stage de 2<sup>ème</sup> année</h2>
+                <div class="img-row">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2721/2721296.png" alt="Réseaux" title="Réseaux" />
+                    <img src="https://cdn-icons-png.flaticon.com/512/3135/3135789.png" alt="Étudiants" title="Étudiants" />
+                </div>
+                <p>
+                    <i class="fa-solid fa-hourglass-half"></i> Informations à venir...
+                </p>
+                <div class="competences-list">
+                    <h3>Compétences du stage</h3>
+                    <ul>
+                        <li>
+                            <button class="competence-btn" onclick="showCompetence('patrimoine2')">Gérer le patrimoine informatique</button>
+                        </li>
+                        <li>
+                            <button class="competence-btn" onclick="showCompetence('incidents2')">Répondre aux incidents et aux demandes d'assistance et d'évolution</button>
+                        </li>
+                        <li>
+                            <button class="competence-btn" onclick="showCompetence('presence2')">Développer la présence en ligne de l'organisation</button>
+                        </li>
+                        <li>
+                            <button class="competence-btn" onclick="showCompetence('projet2')">Travailler en mode projet</button>
+                        </li>
+                        <li>
+                            <button class="competence-btn" onclick="showCompetence('service2')">Mettre à disposition des utilisateurs un service informatique</button>
+                        </li>
+                        <li>
+                            <button class="competence-btn" onclick="showCompetence('devpro2')">Organiser son développement professionnel</button>
+                        </li>
+                    </ul>
+                </div>
+                <!-- Détails des compétences Stage 2 -->
+                <div class="competence-details" id="patrimoine2" style="display:none;">
+                    <button class="close-competence" onclick="closeCompetence('patrimoine2')">Fermer</button>
+                    <h4>Gérer le patrimoine informatique</h4>
+                    <ul>
+                        <li>Recenser et identifier les ressources numériques</li>
+                        <li>Exploiter des référentiels, normes et standards adoptés par le prestataire informatique</li>
+                        <li>Mettre en place et vérifier les niveaux d'habilitation associés à un service</li>
+                        <li>Vérifier les conditions de la continuité d'un service informatique</li>
+                        <li>Gérer des sauvegardes</li>
+                        <li>Vérifier le respect des règles d'utilisation des ressources numériques</li>
+                    </ul>
+                </div>
+                <div class="competence-details" id="incidents2" style="display:none;">
+                    <button class="close-competence" onclick="closeCompetence('incidents2')">Fermer</button>
+                    <h4>Répondre aux incidents et aux demandes d'assistance et d'évolution</h4>
+                    <ul>
+                        <li>Collecter, suivre et orienter des demandes</li>
+                        <li>Traiter des demandes concernant les services réseau et système, applicatifs</li>
+                        <li>Traiter des demandes concernant les applications</li>
+                    </ul>
+                </div>
+                <div class="competence-details" id="presence2" style="display:none;">
+                    <button class="close-competence" onclick="closeCompetence('presence2')">Fermer</button>
+                    <h4>Développer la présence en ligne de l'organisation</h4>
+                    <ul>
+                        <li>Participer à la valorisation de l'image de l'organisation sur les médias numériques en tenant compte du cadre juridique et des enjeux économiques</li>
+                        <li>Référencer les services en ligne de l'organisation et mesurer leur visibilité</li>
+                        <li>Participer à l'évolution d'un site Web exploitant les données de l'organisation</li>
+                    </ul>
+                </div>
+                <div class="competence-details" id="projet2" style="display:none;">
+                    <button class="close-competence" onclick="closeCompetence('projet2')">Fermer</button>
+                    <h4>Travailler en mode projet</h4>
+                    <ul>
+                        <li>Analyser les objectifs et les modalités d'organisation d'un projet</li>
+                        <li>Planifier les activités</li>
+                        <li>Évaluer les indicateurs de suivi d'un projet et analyser les écarts</li>
+                    </ul>
+                </div>
+                <div class="competence-details" id="service2" style="display:none;">
+                    <button class="close-competence" onclick="closeCompetence('service2')">Fermer</button>
+                    <h4>Mettre à disposition des utilisateurs un service informatique</h4>
+                    <ul>
+                        <li>Réaliser les tests d'intégration et d'acceptation d'un service</li>
+                        <li>Déployer un service</li>
+                        <li>Accompagner les utilisateurs dans la mise en place d'un service</li>
+                    </ul>
+                </div>
+                <div class="competence-details" id="devpro2" style="display:none;">
+                    <button class="close-competence" onclick="closeCompetence('devpro2')">Fermer</button>
+                    <h4>Organiser son développement professionnel</h4>
+                    <ul>
+                        <li>Mettre en place son environnement d'apprentissage personnel</li>
+                        <li>Mettre en œuvre des outils et stratégies de veille informationnelle</li>
+                        <li>Gérer son identité professionnelle</li>
+                        <li>Développer son projet professionnel</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <script>
+        // Affichage des détails de stage
+        function showStage(stageId) {
+            document.getElementById('stage1-details').style.display = 'none';
+            document.getElementById('stage2-details').style.display = 'none';
+            if(stageId === 'stage1') {
+                document.getElementById('stage1-details').style.display = 'block';
+            } else if(stageId === 'stage2') {
+                document.getElementById('stage2-details').style.display = 'block';
+            }
+        }
+        function hideStageDetails() {
+            document.getElementById('stage1-details').style.display = 'none';
+            document.getElementById('stage2-details').style.display = 'none';
+        }
+        // Affichage des compétences
+        function showCompetence(id) {
+            // Fermer toutes les compétences ouvertes
+            var all = document.querySelectorAll('.competence-details');
+            all.forEach(function(el){ el.style.display = 'none'; });
+            // Afficher la compétence demandée
+            document.getElementById(id).style.display = 'block';
+        }
+        function closeCompetence(id) {
+            document.getElementById(id).style.display = 'none';
+        }
+        </script>
+        <style>
+        .stage-btn {
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            border-radius: 16px;
+            padding: 18px 32px;
+            font-size: 1.1em;
+            font-family: 'Montserrat', Arial, sans-serif;
+            font-weight: 700;
+            margin: 0 16px 16px 0;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.2s;
+            box-shadow: 0 2px 12px 0 rgba(79,140,255,0.13);
+        }
+        .stage-btn:hover {
+            background: var(--secondary);
+            color: #232946;
+            transform: scale(1.05);
+        }
+        .stage-details {
+            margin-top: 30px;
+        }
+        .back-btn {
+            background: none;
+            color: var(--primary);
+            border: none;
+            font-size: 1em;
+            font-family: 'Montserrat', Arial, sans-serif;
+            font-weight: 700;
+            margin-bottom: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .competences-list ul {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 24px 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .competence-btn {
+            background: var(--secondary);
+            color: #232946;
+            border: none;
+            border-radius: 12px;
+            padding: 10px 18px;
+            font-size: 1em;
+            font-family: 'Montserrat', Arial, sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s, transform 0.2s;
+        }
+        .competence-btn:hover {
+            background: var(--accent);
+            color: #fff;
+            transform: scale(1.07);
+        }
+        .competence-details {
+            background: #232946;
+            color: var(--text);
+            border-radius: 12px;
+            padding: 18px 22px;
+            margin-bottom: 18px;
+            box-shadow: 0 2px 12px 0 rgba(79,140,255,0.13);
+            position: relative;
+            animation: fadeInUp 0.7s;
+        }
+        .competence-details h4 {
+            color: var(--primary);
+            margin-top: 0;
+        }
+        .close-competence {
+            position: absolute;
+            top: 10px;
+            right: 18px;
+            background: none;
+            border: none;
+            color: var(--accent);
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 1em;
+        }
+        </style>
+        </section>
+        <!-- CV & Lettre -->
+        <section id="cvlettre">
+            <div class="card cv-section">
+                <h2><span class="icon"><i class="fa-solid fa-file-lines"></i></span> Mon CV</h2>
+                <div class="img-row">
+                    <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Avatar" title="Moi" />
+                    <img src="https://cdn-icons-png.flaticon.com/512/3135/3135789.png" alt="Étudiants" title="Étudiants" />
+                    <img src="https://cdn-icons-png.flaticon.com/512/2721/2721304.png" alt="SISR" title="SISR" />
+                </div>
+                <h3><i class="fa-solid fa-id-card"></i> Informations personnelles</h3>
+                <ul>
+                    <li><i class="fa-solid fa-user"></i> Nom : Alenzo Wauters</li>
+                    <li><i class="fa-solid fa-cake-candles"></i> Âge : 20 ans</li>
+                    <li><i class="fa-solid fa-graduation-cap"></i> Formation : BTS SIO SISR, Lycée Gaston Berger, Ronchin</li>
+                </ul>
+                <h3><i class="fa-solid fa-screwdriver-wrench"></i> Compétences</h3>
+                <ul>
+                    <li><i class="fa-solid fa-network-wired"></i> Administration des réseaux et systèmes</li>
+                    <li><i class="fa-solid fa-server"></i> Configuration de matériel réseau (switch, routeur)</li>
+                    <li><i class="fa-solid fa-user-shield"></i> Gestion des utilisateurs et des droits d'accès</li>
+                    <li><i class="fa-solid fa-shield-halved"></i> Cybersécurité de base</li>
+                    <li><i class="fa-solid fa-headset"></i> Assistance technique</li>
+                </ul>
+                <h3><i class="fa-solid fa-briefcase"></i> Expériences</h3>
+                <ul>
+                    <li><i class="fa-solid fa-building"></i> Stage 1ère année - Veolia Lezennes (Réseaux et infrastructure)</li>
+                </ul>
+            </div>
+            <div class="card lettre-section">
+                <h2><span class="icon"><i class="fa-solid fa-envelope"></i></span> Lettre de motivation</h2>
+                <div class="img-row">
+                    <img src="https://cdn-icons-png.flaticon.com/512/561/561127.png" alt="Lettre" title="Lettre" />
+                    <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Avatar" title="Moi" />
+                </div>
+                <p>
+Madame, Monsieur,
+
+Actuellement étudiant en BTS SIO option SISR au lycée Gaston Berger à Ronchin, je suis passionné par les réseaux et l'infrastructure informatique. Je souhaite mettre à profit mes compétences et mon sérieux au sein de votre entreprise afin de développer davantage mes connaissances et d'acquérir une expérience professionnelle enrichissante.
+
+Rigoureux, motivé et curieux, je m'investis pleinement dans les missions qui me sont confiées. Je suis convaincu que votre structure me permettra de progresser et de contribuer efficacement à vos projets.
+
+Je vous remercie de l'attention portée à ma candidature et me tiens à votre disposition pour un entretien.
+
+Cordialement,
+
+Alenzo Wauters
+                </p>
+            </div>
+        </section>
+    </div>
+    <!-- Social floating bar -->
+    <div class="social-float">
+        <a href="https://github.com/alenzo" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
+        <a href="https://linkedin.com/in/alenzo-wauters" target="_blank" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+        <a href="mailto:alenzo.wauters@gmail.com" title="Mail"><i class="fa-solid fa-envelope"></i></a>
+        <a href="https://twitter.com/alenzo" target="_blank" title="Twitter"><i class="fab fa-twitter"></i></a>
+    </div>
+</body>
+</html>
